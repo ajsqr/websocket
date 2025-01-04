@@ -32,6 +32,7 @@ import (
 	 "github.com/go-chi/chi/v5"
 	 "net/http"
 	 "time"
+	 "fmt"
 )
 
 var opener = websocket.WSOpener{
@@ -45,10 +46,13 @@ func hello(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	_, err = ws.Receive(ctx)
+	// wait for a message from the client
+	clientHello, err := ws.Receive(ctx)
 	if err != nil{
 		panic(err.Error())
 	}
+
+	fmt.Printf("client says : %s", string(clientHello))
 
 	for {
 		err := ws.Send(ctx, []byte("hello"))
